@@ -15,6 +15,10 @@ class Comment extends Model
     public function client() {
         return $this->belongsTo(Client::class);
     }
+
+    public function patient() {
+        return $this->belongsTo(Patient::class);
+    }
     
     // patient-chatでコメント取得の際に使う。
     public function worker() {

@@ -11,7 +11,7 @@ class CommentController extends Controller
     public function search(Request $request)
     {
         $item = Comment::where('patient_id',$request->patient_id)
-        ->with('client.relations.relation_type','worker.role')
+        ->with('client.relations.relation_type','patient.relations.relation_type','worker.role')
         ->get();
         if ($item) {
             return response()->json([
