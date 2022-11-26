@@ -16,8 +16,4 @@ class RelationType extends Model
     public static $rules = array(
         'name' => 'required|max:100',
     );
-
-    public function relations() {
-        return $this->hasMany(Client::class);
-    }
 }

@@ -15,6 +15,7 @@ class ClientPatientController extends Controller
             'data' => $item
         ], 201);
     }
+    
     // client_patientsテーブルの履歴にclient_idとpatient_idの同じ組み合わせが無いか確認。
     public function check(Request $request)
     {
@@ -36,7 +37,7 @@ class ClientPatientController extends Controller
         }
     }
     // ここでclients の id を使って 患者チャットpatientの履歴 idを取得。
-    public function show(Request $request)
+    public function search(Request $request)
     {
         $item = ClientPatient::where('client_id',$request->client_id)
         ->with('patient')

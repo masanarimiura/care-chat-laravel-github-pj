@@ -16,8 +16,4 @@ class Role extends Model
     public static $rules = array(
         'name' => 'required|max:100',
     );
-
-    public function workers() {
-        return $this->hasMany(Worker::class);
-    }
 }

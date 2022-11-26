@@ -13,11 +13,8 @@ class Shop extends Model
 
     public $timestamps = false;
 
+    // my-pageでworkerの情報を取得する際使う。
     public function shop_type() {
         return $this->belongsTo(ShopType::class);
-    }
-    
-    public function workers() {
-        return $this->hasMany(Worker::class);
     }
 }

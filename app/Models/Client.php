@@ -13,11 +13,14 @@ class Client extends Model
 
     public $timestamps = false;
 
-    public function comments(){
-        return $this->belongsToMany(Patient::class,'comments','client_id','patient_id');
+    // my-pageのクライアント情報取得、patient-chatの関係性表示で使う。
+    public function relations(){
+        return $this->hasMany(Relation::class);
     }
 
-    public function relations(){
-        return $this->belongsToMany(Patient::class,'relations','client_id','patient_id');
+    // my-pageのクライアント情報取得で使う。
+    public function client_patients(){
+        return $this->hasMany(ClientPatient::class);
     }
+
 }

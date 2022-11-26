@@ -36,7 +36,7 @@ class WorkerPatientController extends Controller
         }
     }
     // ここでworkers の id を使って 患者チャットpatientの履歴 idを取得。
-    public function show(Request $request)
+    public function search(Request $request)
     {
         $item = WorkerPatient::where('worker_id',$request->worker_id)
         ->with('patient')

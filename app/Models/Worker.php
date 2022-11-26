@@ -13,19 +13,13 @@ class Worker extends Model
 
     public $timestamps = false;
 
+    // my-pageのクライアント情報取得で使う。
     public function shop() {
         return $this->belongsTo(Shop::class);
     }
 
+    // my-pageのクライアント情報取得、patient-chatの職種表示で使う。
     public function role() {
         return $this->belongsTo(Role::class);
-    }
-
-    public function comments(){
-        return $this->belongsToMany(Patient::class,'comments','worker_id','patient_id');
-    }
-
-    public function worker_patients(){
-        return $this->belongsToMany(Patient::class,'worker_patients','worker_id','patient_id');
     }
 }

@@ -9,29 +9,36 @@ use App\Http\Controllers\ClientPatientController;
 use App\Http\Controllers\WorkerPatientController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\RelationController;
+use App\Http\Controllers\ShopTypeController;
 
 
-// クライアントアカウント登録
+// クライアントアカウント登録、更新
 Route::apiResource('/v1/client', ClientController::class)->only([
-        'store'
+        'store','update'
 ]);
 
-// ケアワーカーアカウント登録
+// ケアワーカーアカウント登録、更新
 Route::apiResource('/v1/worker', WorkerController::class)->only([
-        'store'
+        'store','update'
 ]);
 
 // firebaseのuidを使って、clientかworkerかを確認する
-Route::get('/v1/client', [ClientController::class, 'show']);
-Route::get('/v1/worker', [WorkerController::class, 'show']);
+Route::get('/v1/client-check', [ClientController::class, 'check']);
+Route::get('/v1/worker-check', [WorkerController::class, 'check']);
+
+// clients or workerのidを使って情報を取得。
+Route::get('/v1/client-search', [ClientController::class, 'show']);
+Route::get('/v1/worker-search', [WorkerController::class, 'show']);
 
 // 新しい患者チャット patientsテーブルに作成
 Route::apiResource('/v1/patient', PatientController::class)->only([
-        'store'
+        'store','show'
 ]);
 
-// ここでpatientのnameとpasswordを使って patientsのidを取得。
-Route::get('/v1/patient-search', [PatientController::class, 'show']);
+// patientのnameとpasswordを使って patientsのidを取得。
+Route::get('/v1/patient-search', [PatientController::class, 'search']);
+
 
 // クライアントが患者チャットを「作成」or「参加」時に次から簡単に参加できるように履歴を残す。
 Route::apiResource('/v1/client-patient', ClientPatientController::class)->only([
@@ -48,27 +55,38 @@ Route::get('/v1/client-patient-check', [ClientPatientController::class, 'check']
 Route::get('/v1/worker-patient-check', [WorkerPatientController::class, 'check']);
 
 // join時に患者チャットの履歴取得
-Route::get('/v1/client-patient-search', [ClientPatientController::class, 'show']);
-Route::get('/v1/worker-patient-search', [WorkerPatientController::class, 'show']);
+Route::get('/v1/client-patient-search', [ClientPatientController::class, 'search']);
+Route::get('/v1/worker-patient-search', [WorkerPatientController::class, 'search']);
 
+// コメントとそれに付随する情報の取得。
+Route::get('/v1/comment-search', [CommentController::class, 'search']);
 
+// コメントの投稿、更新、削除
+Route::apiResource('/v1/comment', CommentController::class)->only([
+        'store','update','destroy'
+]);
+
+// my-page.vueからの relation_type_id の保存
+Route::apiResource('/v1/relation', RelationController::class)->only([
+        'store','update'
+]);
+
+// relations に client_id と patient_id の同じ組み合わせがないか確認
+Route::get('/v1/relation-check', [RelationController::class, 'check']);
+
+// shop 一覧の取得と追加
 Route::apiResource('/v1/shop', ShopController::class)->only([
-        'index','store'
+        'index','store','update'
 ]);
 
-Route::apiResource('/v1/client-comment', ClientCommentController::class)->only([
-        'store','update','destroy'
+// 新規登録した shop のid 取得 
+Route::get('/v1/shop-search', [ShopController::class,'search']);
+
+// shop_type 一覧の取得
+Route::apiResource('/v1/shop_type', ShopTypeController::class)->only([
+        'index'
 ]);
 
-Route::apiResource('/v1/worker-comment', WorkerCommentController::class)->only([
-        'store','update','destroy'
-]);
-
-
-
-
-Route::get('/v1/client-comment-search', [ClientCommentController::class, 'show']);
-Route::get('/v1/worker-comment-search', [WorkerCommentController::class, 'show']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

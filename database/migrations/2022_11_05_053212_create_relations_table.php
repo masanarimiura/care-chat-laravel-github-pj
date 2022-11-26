@@ -10,12 +10,12 @@ class CreateRelationsTable extends Migration
     {
         Schema::create('relations', function (Blueprint $table) {
             $table->bigIncrements('id')->unsigned();
-            $table->bigInteger('relation-type_id')->unsigned();
+            $table->bigInteger('relation_type_id')->unsigned();
             $table->bigInteger('client_id')->unsigned();
             $table->bigInteger('patient_id')->unsigned();
-            $table->foreign('relation-type_id')
+            $table->foreign('relation_type_id')
                     ->references('id')
-                    ->on('relations')
+                    ->on('relation_types')
                     ->onDelete('cascade');
             $table->foreign('client_id')
                     ->references('id')
@@ -27,7 +27,6 @@ class CreateRelationsTable extends Migration
                     ->onDelete('cascade');
         });
     }
-
     public function down()
     {
         Schema::dropIfExists('relations');

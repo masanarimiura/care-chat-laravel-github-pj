@@ -11,20 +11,16 @@ class Relation extends Model
 
     protected $guarded = array('id');
 
+    public $timestamps = false;
+
     public static $rules = array(
+        'relation_type_id' => 'required',
         'client_id' => 'required',
         'patient_id' => 'required',
     );
 
+    // my-pageのクライアント情報取得で使う。
     public function relation_type() {
-        return $this->belongsTo(Relation::class);
-    }
-
-    public function client() {
-        return $this->belongsTo(Client::class);
-    }
-    
-    public function patient() {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(RelationType::class);
     }
 }

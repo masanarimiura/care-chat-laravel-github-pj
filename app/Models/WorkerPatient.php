@@ -18,11 +18,8 @@ class WorkerPatient extends Model
         'patient_id' => 'required',
     );
 
+    // patient-indexの参加履歴取得で使う。
     public function patient() {
         return $this->belongsTo(Patient::class);
-    }
-
-    public function worker() {
-        return $this->belongsTo(Worker::class);
     }
 }

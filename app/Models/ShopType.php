@@ -16,8 +16,4 @@ class ShopType extends Model
     public static $rules = array(
         'name' => 'required|max:100',
     );
-
-    public function shops() {
-        return $this->hasMany(Shop::class);
-    }
 }

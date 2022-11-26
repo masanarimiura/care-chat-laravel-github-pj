@@ -18,11 +18,8 @@ class ClientPatient extends Model
         'patient_id' => 'required',
     );
 
+    // patient-indexの参加履歴取得と、my-pageのクライアント情報取得で使う。
     public function patient() {
         return $this->belongsTo(Patient::class);
-    }
-
-    public function client() {
-        return $this->belongsTo(Client::class);
     }
 }

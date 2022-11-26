@@ -42,5 +42,8 @@ class RolesTableSeeder extends Seeder
         Role::create([
             'name' => '施設担当者',
         ]);
+        Role::create([
+            'name' => 'その他',
+        ]);
     }
 }

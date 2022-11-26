@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ClientComment;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
-class ClientCommentController extends Controller
+class CommentController extends Controller
 {
-    public function show(Request $request)
+    // コメントとそれに付随する情報の取得。
+    public function search(Request $request)
     {
-        $item = ClientComment::where('patient_id',$request->patient_id)
-        ->with('worker','client')
+        $item = Comment::where('patient_id',$request->patient_id)
+        ->with('client.relations.relation_type','worker.role')
         ->get();
         if ($item) {
             return response()->json([
@@ -23,20 +24,21 @@ class ClientCommentController extends Controller
         }
     }
     
+    // 以下コメントの保存、更新、削除。
     public function store(Request $request)
     {
-        $item = ClientComment::create($request->all());
+        $item = Comment::create($request->all());
         return response()->json([
             'data' => $item
         ], 201);
     }
 
-    public function update(Request $request, ClientComment $client)
+    public function update(Request $request, Comment $comment)
     {
         $update = [
             'content' => $request->content,
         ];
-        $item = ClientComment::where('id', $client->id)->update($update);
+        $item = Comment::where('id', $comment->id)->update($update);
         if ($item) {
             return response()->json([
             'message' => 'Updated successfully',
@@ -48,9 +50,9 @@ class ClientCommentController extends Controller
         }
     }
 
-    public function destroy(ClientComment $client)
+    public function destroy(Comment $comment)
     {
-        $item = ClientComment::where('id', $client->id)->delete();
+        $item = Comment::where('id', $comment->id)->delete();
         if ($item) {
             return response()->json([
                 'message' => 'Deleted successfully',
