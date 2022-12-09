@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Comment\CommentStoreRequest;
+use App\Http\Requests\Comment\CommentUpdateRequest;
 
 class CommentController extends Controller
 {
@@ -25,7 +28,7 @@ class CommentController extends Controller
     }
     
     // 以下コメントの保存、更新、削除。
-    public function store(Request $request)
+    public function store(CommentStoreRequest $request)
     {
         $item = Comment::create($request->all());
         return response()->json([
@@ -33,7 +36,7 @@ class CommentController extends Controller
         ], 201);
     }
 
-    public function update(Request $request, Comment $comment)
+    public function update(CommentUpdateRequest $request, Comment $comment)
     {
         $update = [
             'content' => $request->content,

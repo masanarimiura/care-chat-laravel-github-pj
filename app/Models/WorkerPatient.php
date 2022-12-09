@@ -13,11 +13,6 @@ class WorkerPatient extends Model
 
     public $timestamps = false;
 
-    public static $rules = array(
-        'worker_id' => 'required',
-        'patient_id' => 'required',
-    );
-
     // patient-indexの参加履歴取得で使う。
     public function patient() {
         return $this->belongsTo(Patient::class);

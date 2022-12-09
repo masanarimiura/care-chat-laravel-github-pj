@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Client\ClientStoreRequest;
+use App\Http\Requests\Client\ClientUpdateRequest;
 
 class ClientController extends Controller
 {
     // 新規 client 登録
-    public function store(Request $request)
+    public function store(ClientStoreRequest $request)
     {
         $item = Client::create($request->all());
         return response()->json([
@@ -16,8 +19,8 @@ class ClientController extends Controller
         ], 201);
     }
 
-    // clients の name numberの更新
-    public function update(Request $request, Client $client)
+    // clients の name number emailの更新
+    public function update(ClientUpdateRequest $request, Client $client)
     {
         if($request->name and $request->number == null and $request->email == null){
             $update = [
@@ -48,6 +51,41 @@ class ClientController extends Controller
         }
     }
 
+    public function icon_update(Request $request,)
+    {
+        if($request->file('file')){
+            // formDataからfileを取り出し、storeで、public下のiconに保存、返り値でパスをもらう。
+            $image = $request->file('file');
+            $imagePath = $image->store('public/icon');
+            // パスのpublic部分が不要となるので切り捨てる
+            $imagePath= 'storage'.str_replace('public','',$imagePath);
+            $update = [
+                'icon_path' => $imagePath,
+            ];
+            $client_id = json_decode($request->client_id);
+            if($client_id){
+                $item = Client::where('id', $client_id)->update($update);
+                if ($item) {
+                    return response()->json([
+                        'message' => $imagePath,
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Not found',
+                    ], 404);
+                }
+            } else {
+                return response()->json([
+                        'message' => 'Client_id not found',
+                    ], 404);
+            }
+        } else {
+            return response()->json([
+                'message' => 'File not found',
+            ], 404);
+        }
+    }
+
     // firebaseのuidを使って、clientかworkerかを確認する
     public function check(Request $request)
     {
@@ -66,6 +104,7 @@ class ClientController extends Controller
             ], 404);
         }
     }
+    
     // clientsの idからクライアントに関する情報を取得。
     public function show(Request $request)
     {

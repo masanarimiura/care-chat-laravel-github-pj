@@ -13,12 +13,6 @@ class Relation extends Model
 
     public $timestamps = false;
 
-    public static $rules = array(
-        'relation_type_id' => 'required',
-        'client_id' => 'required',
-        'patient_id' => 'required',
-    );
-
     // my-pageのクライアント情報取得で使う。
     public function relation_type() {
         return $this->belongsTo(RelationType::class);

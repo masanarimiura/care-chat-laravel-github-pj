@@ -15,6 +15,7 @@ class CreateClientsTable extends Migration
             $table->string('password', 256);
             $table->string('number',20)->nullable();
             $table->string('uid',256)->unique();
+            $table->string('icon_path',256)->unique()->nullable();
         });
     }
 

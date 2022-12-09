@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Worker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Worker\WorkerStoreRequest;
+use App\Http\Requests\Worker\WorkerUpdateRequest;
 
 class WorkerController extends Controller
 {
     // 新規 worker 登録
-    public function store(Request $request)
+    public function store(WorkerStoreRequest $request)
     {
         $item = Worker::create($request->all());
         return response()->json([
@@ -17,7 +20,7 @@ class WorkerController extends Controller
     }
 
     // workers の name number role_idの更新
-    public function update(Request $request, Worker $worker)
+    public function update(WorkerUpdateRequest $request, Worker $worker)
     {
         if($request->name and $request->number == null and $request->role_id == null and $request->shop_id == null and $request->email == null){
             $update = [
@@ -52,6 +55,43 @@ class WorkerController extends Controller
         } else {
             return response()->json([
             'message' => 'Not found',
+            ], 404);
+        }
+    }
+
+    public function icon_update(Request $request,)
+    {
+        if($request->file('file')){
+            // formDataからfileを取り出し、storeで、public下のiconに保存、返り値でパスをもらう。
+            $image = $request->file('file');
+            $imagePath = $image->store('public/icon');
+            // パスのpublic部分が不要となるので切り捨てる
+            $imagePath= 'storage'.str_replace('public','',$imagePath);
+            $update = [
+                'icon_path' => $imagePath,
+            ];
+            $worker_id = json_decode($request->worker_id);
+            if($worker_id){
+                $item = Client::where('id', $worker_id)->update($update);
+                if ($item) {
+                    return response()->json([
+                        'message' => $imagePath,
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Not found',
+                    ], 404);
+                }
+            } else {
+                // worker_idが無い場合のエラー
+                return response()->json([
+                        'message' => 'Client_id not found',
+                    ], 404);
+            }
+        } else {
+            // fileがない場合のエラー
+            return response()->json([
+                'message' => 'File not found',
             ], 404);
         }
     }

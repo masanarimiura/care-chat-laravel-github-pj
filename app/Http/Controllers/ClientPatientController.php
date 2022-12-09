@@ -4,38 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\ClientPatient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\ClientPatient\ClientPatientStoreRequest;
 
 class ClientPatientController extends Controller
 {
-    // join履歴の client-patientsテーブルへ worker_id と patient_id を記録
-    public function store(Request $request)
+    // チャットIDへの参加or作成の履歴の client-patientsテーブルへ client_id と patient_id を記録
+    public function store(ClientPatientStoreRequest $request)
     {
-        $item = ClientPatient::create($request->all());
-        return response()->json([
-            'data' => $item
-        ], 201);
-    }
-    
-    // client_patientsテーブルの履歴にclient_idとpatient_idの同じ組み合わせが無いか確認。
-    public function check(Request $request)
-    {
+        // client_idとpatient_id の同一の組み合わせがないか確認
         $item = ClientPatient::where('client_id',$request->client_id)
         ->where('patient_id',$request->patient_id)
-        ->get();
-        if ($item) {
+        ->first();
+        if ($item != null) {
             return response()->json([
-                'data' => $item
+                'data' => $item,
+                'message' => 'Found same column'
             ], 200);
         } else if ($item == null) {
+            $item = ClientPatient::create($request->all());
             return response()->json([
-                'data' => null
-            ], 200);
+                'data' => $item
+            ], 201);
         } else {
             return response()->json([
                 'message' => 'Not found',
             ], 404);
         }
     }
+    
     // ここでclients の id を使って 患者チャットpatientの履歴 idを取得。
     public function search(Request $request)
     {

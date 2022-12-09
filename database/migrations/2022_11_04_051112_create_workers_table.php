@@ -17,6 +17,7 @@ class CreateWorkersTable extends Migration
             $table->string('uid',256)->unique();
             $table->bigInteger('role_id')->unsigned()->nullable();
             $table->bigInteger('shop_id')->unsigned()->nullable();
+            $table->string('icon_path',256)->unique()->nullable();
             $table->foreign('shop_id')
                     ->references('id')
                     ->on('shops')
