@@ -59,7 +59,7 @@ class WorkerController extends Controller
         }
     }
 
-    public function icon_update(Request $request,)
+    public function icon_update(Request $request)
     {
         if($request->file('file')){
             // formDataからfileを取り出し、storeで、public下のiconに保存、返り値でパスをもらう。
